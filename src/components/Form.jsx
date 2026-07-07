@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 
 function Form({ addOrUpdateItem, itemToEdit }) {
   const [inputValue, setInputValue] = useState("");
@@ -13,10 +13,14 @@ function Form({ addOrUpdateItem, itemToEdit }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (inputValue.trim()) {
-      addOrUpdateItem(inputValue);
-      setInputValue("");
+
+    if (!inputValue.trim()) {
+      alert("Por favor ingresa un elemento");
+      return;
     }
+
+    addOrUpdateItem(inputValue.trim());
+    setInputValue("");
   };
 
   return (
@@ -26,6 +30,7 @@ function Form({ addOrUpdateItem, itemToEdit }) {
         value={inputValue}
         onChange={(e) => setInputValue(e.target.value)}
       />
+
       <button type="submit">
         {itemToEdit ? "Actualizar" : "Agregar"}
       </button>

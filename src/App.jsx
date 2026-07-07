@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import Form from './components/Form';
-import List from './components/List';
-import './App.css';
+import React, { useState, useEffect } from "react";
+import Form from "./components/Form";
+import List from "./components/List";
+import "./App.css";
 
 function App() {
   const [items, setItems] = useState([]);
@@ -9,15 +9,13 @@ function App() {
 
   useEffect(() => {
     const storedItems =
-      JSON.parse(localStorage.getItem('items')) || [];
+      JSON.parse(localStorage.getItem("items")) || [];
     setItems(storedItems);
   }, []);
 
   useEffect(() => {
-  console.log("Items:", items);
-
-  localStorage.setItem("items", JSON.stringify(items));
-}, [items]);
+    localStorage.setItem("items", JSON.stringify(items));
+  }, [items]);
 
   const addOrUpdateItem = (value) => {
     if (itemToEdit) {
@@ -30,12 +28,24 @@ function App() {
       );
       setItemToEdit(null);
     } else {
-      setItems([...items, { id: Date.now(), value }]);
+      setItems([
+        ...items,
+        {
+          id: Date.now(),
+          value,
+        },
+      ]);
     }
   };
 
   const deleteItem = (id) => {
-    setItems(items.filter((item) => item.id !== id));
+    const confirmar = window.confirm(
+      "¿Seguro que deseas eliminar este elemento?"
+    );
+
+    if (confirmar) {
+      setItems(items.filter((item) => item.id !== id));
+    }
   };
 
   const editItem = (item) => {
@@ -50,6 +60,8 @@ function App() {
         addOrUpdateItem={addOrUpdateItem}
         itemToEdit={itemToEdit}
       />
+
+      <p>Total: {items.length}</p>
 
       <List
         items={items}
