@@ -6,10 +6,10 @@ import "./App.css";
 function App() {
   const [items, setItems] = useState([]);
   const [itemToEdit, setItemToEdit] = useState(null);
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
-    const storedItems =
-      JSON.parse(localStorage.getItem("items")) || [];
+    const storedItems = JSON.parse(localStorage.getItem("items")) || [];
     setItems(storedItems);
   }, []);
 
@@ -33,6 +33,7 @@ function App() {
         {
           id: Date.now(),
           value,
+          completed: false,
         },
       ]);
     }
@@ -52,6 +53,26 @@ function App() {
     setItemToEdit(item);
   };
 
+  const toggleComplete = (id) => {
+    setItems(
+      items.map((item) =>
+        item.id === id
+          ? { ...item, completed: !item.completed }
+          : item
+      )
+    );
+  };
+
+  const deleteAll = () => {
+    if (window.confirm("¿Esta seguro que desea eliminar todos los elementos?")) {
+      setItems([]);
+    }
+  };
+
+  const filteredItems = items.filter((item) =>
+    item.value.toLowerCase().includes(search.toLowerCase())
+  );
+
   return (
     <div className="App">
       <h1>CRUD con LocalStorage</h1>
@@ -61,12 +82,30 @@ function App() {
         itemToEdit={itemToEdit}
       />
 
-      <p>Total: {items.length}</p>
+      <input
+        className="buscador"
+        type="text"
+        placeholder="Buscar..."
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+      />
+
+      <div className="barra-superior">
+        <p>Total: {items.length}</p>
+
+        <button
+          className="borrarTodo"
+          onClick={deleteAll}
+        >
+          Borrar Todo
+        </button>
+      </div>
 
       <List
-        items={items}
+        items={filteredItems}
         deleteItem={deleteItem}
         editItem={editItem}
+        toggleComplete={toggleComplete}
       />
     </div>
   );
